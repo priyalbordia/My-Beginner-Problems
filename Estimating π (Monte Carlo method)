@@ -1,0 +1,33 @@
+#import required packages
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.special
+
+### My code is for N dimensional Hyper Sphere of Unit Radius
+
+##defined everything to save space for later variables
+
+def inUnitHyperSph(x): 
+  r_1 = np.sum(x**2, axis = 0) ## generated an array of sum of square of all coordinates and r_1 = r**2
+  return r_1<1 ## as the darts hitting outside the sphere are of no use for calculation of π
+
+def Ndim_darts(d, N_d, N_m):
+  return np.random.uniform(-1, 1, (d, N_d, N_m) ) ## generated a random array of dxN_dxN_M matrix with limit from [-1,1)
+
+def Measurements(d, N_d, N_m):
+  N_sph = np.sum(inUnitHyperSph( Ndim_darts(d, N_d, N_m) ), axis=0) ## sum of all the points where darts hit inside the Hyper Sphere
+  coeff = (2**d * scipy.special.gamma(1.0 + d/2.0)) ** (2.0/d) 
+  pi_meas = coeff * (N_sph/N_d) 
+  sigma_pi = np.std(pi_meas)
+  return np.mean(pi_meas), np.std(pi_meas) / np.sqrt(N_m-1)
+
+N_meas  = 1000
+N_darts = 100
+
+d = 2 #for 2 dimensinal sphere / circle
+piBar, sigma_piBar = Measurements(d, N_darts, N_meas)
+print( "In d = {}: pi = {} +/- {}".format(d, piBar, sigma_piBar) )
+
+
+plt.hist(pi_meas, color = 'c') # Histogram of Cyan color
+plt.title('Estimates of Pi(π)')
