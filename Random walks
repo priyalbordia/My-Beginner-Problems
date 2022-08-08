@@ -1,0 +1,19 @@
+N_steps = 20 # Number of steps taken
+N_experiments = 1000 # Number of times N_steps taken
+
+d_i = [] # measured displacement
+for i in range (0, N_experiments): #for loop for N_experiments
+  x = 0
+  steps = []
+  for i in range (0, N_steps):
+    p = np.random.uniform(-1, 1)
+    if p > 0: # if person goes right
+        x = 1
+    elif p < 0:
+        x = -1 # if person goes left
+    steps.append(x)
+  d_i.append(steps)
+d = np.sum(d_i, axis = 1) # sum of all measured displacements in every experiment
+d_bar = np.mean(d)/N_experiments # mean of all measured displacements in every experiment
+sigma_bar = np.std(d_i)/((N_experiments - 1)**1/2) # standard deviation of d_bar
+print("Expected displacement = {}, Standard deviation of Expected displacement = {}". format(d_bar, sigma_bar))
